@@ -97,6 +97,20 @@ def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
+    
+    #_______________________________________
+    #to test
+    
+    
+    
+    if connection.recv(1024) == True:
+        cmessage = connection.recv(1024)
+        cmessage = cmessage.decode()
+        print(client_name, " >>> ", cmessage)
+        
+    
+    #end test
+    #_______________________________________
 
 """
 create a recv function that does not wait for recv message to continue, everything else continues while
