@@ -97,7 +97,17 @@ def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
-    
+
+"""
+create a recv function that does not wait for recv message to continue, everything else continues while
+waiting for messages
+
+create gui for the client side
+upload secondary backup to github
+create 2nd github project for the client side
+
+
+"""
     
     window.mainloop()
 
