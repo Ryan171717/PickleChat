@@ -30,6 +30,8 @@ def startMenu(soc, host_name, ip):
     #creates screen and title
     screen = Tk()
     screen.title("PickleChat Menu")
+   
+    screen.bind(<Enter>, start(nameEnter, screen))
     
     #combines ip and network name to be printed in a label
     h_ip = host_name + " ({})".format(ip)
