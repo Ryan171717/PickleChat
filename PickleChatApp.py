@@ -2,6 +2,7 @@
 from tkinter import *
 import socket
 import sys
+import time
 #create a port to communicate on
 port = 1234
 
@@ -60,7 +61,7 @@ print("Username: ",name)
 print("Waiting for incoming connections...")
 
 #waits for incoming connections
-soc.listen(1)
+soc.listen(5)
 
 #accepts connections
 connection, addr = soc.accept()
@@ -71,7 +72,7 @@ connection.send(name.encode())
 #recv the username from the connected user
 client_name = connection.recv(1024)
 client_name = client_name.decode()
-print(client_name, " has joined your PickleChat server")
+print(client_name, "has joined your PickleChat server")
 
 #send button function
 #message is set equal to the contents of the message box
@@ -81,9 +82,9 @@ def sendf(messageBox):
     message = messageBox.get()
     connection.send(message.encode())
     messageBox.delete(0, END)
-
 #creates the gui for the main pickle chat app
-def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
+
+def chatRoom(t, soc, connection, addr, port, host_name, ip, name, client_name):
     window = Tk()
     window.title("PickleChat")
     #creates file title and dimensions of window
@@ -97,33 +98,8 @@ def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
-    
-    #_______________________________________
-    #to test
-    
-    
-    
-    if connection.recv(1024) == True:
-        cmessage = connection.recv(1024)
-        cmessage = cmessage.decode()
-        print(client_name, " >>> ", cmessage)
-        
-    
-    #end test
-    #_______________________________________
-
-"""
-create a recv function that does not wait for recv message to continue, everything else continues while
-waiting for messages
-
-create gui for the client side
-upload secondary backup to github
-create 2nd github project for the client side
-
-
-"""
-    
+            
     window.mainloop()
+    
 
-
-chatRoom(soc, connection, addr, port, host_name, ip, name, client_name)
+chatRoom(t, soc, connection, addr, port, host_name, ip, name, client_name)
