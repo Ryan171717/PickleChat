@@ -3,6 +3,7 @@ from tkinter import *
 import socket
 import sys
 import time
+import thread
 #create a port to communicate on
 port = 1234
 
@@ -84,7 +85,7 @@ def sendf(messageBox):
     messageBox.delete(0, END)
 #creates the gui for the main pickle chat app
 
-def chatRoom(t, soc, connection, addr, port, host_name, ip, name, client_name):
+def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
     window = Tk()
     window.title("PickleChat")
     #creates file title and dimensions of window
@@ -94,12 +95,18 @@ def chatRoom(t, soc, connection, addr, port, host_name, ip, name, client_name):
     #calls the sendf function with messageBox parameter
     sendButton = Button(window, text = "SEND", command = lambda : sendf(messageBox))
     sendButton.grid(column = 0, row = 0)
+    
+    window.bind(<Enter>, sendf(messageBox)
 
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
             
     window.mainloop()
-    
-
-chatRoom(t, soc, connection, addr, port, host_name, ip, name, client_name)
+def incoming(soc, connection, addr, port, host_name, ip, name, client_name):
+    while True:
+        cmessage = connection.recv(1024)
+        cmessage = cmessage.decode()
+        print(client_name, " >>> ", cmessage)
+threading.Thread(target = chatRoom(soc, connection, addr, port, host_name, ip, name, client_name)).start()
+threading.Thread(target = incoming(soc, connection, addr, port, host_name, ip, name, client_name)).start()
