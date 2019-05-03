@@ -59,8 +59,6 @@ def startMenu(soc, host_name, ip):
 #calls start menu screen to open creating isolated start menu screen
 startMenu(soc, host_name, ip)
 #--------------------------------------------------------
-
-#puts port and network name together
 soc.bind((host_name, port))
 
 #prints your username in the main ide
@@ -68,7 +66,7 @@ print("Username: ",name)
 print("Waiting for incoming connections...")
 
 #waits for incoming connections
-soc.listen(1)
+soc.listen(5)
 
 #accepts connections
 connection, addr = soc.accept()
@@ -91,7 +89,7 @@ def sendf(messageBox, message):
     messageBox.delete(0, END)
 #creates the gui for the main pickle chat app
 
-def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
+def chatRoom():
     window = Tk()
     window.title("PickleChat")
     #creates file title and dimensions of window
@@ -99,22 +97,24 @@ def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
 
     #placed at the top
     #calls the sendf function with messageBox parameter
-    sendButton = Button(window, text = "SEND", command = lambda : sendf(messageBox))
-    sendButton.grid(column = 0, row = 0)
+    
 
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
-
     message = messageBox.get()
-    window.bind("<Enter>", sendf)
+    sendButton = Button(window, text = "SEND", command = lambda: sendf(messageBox, message))
+    sendButton.grid(column = 0, row = 0)
+
+    
+    window.bind("<Enter>", lambda event: sendf(messageBox, message))
     window.mainloop()
 
-def incoming(soc, connection, addr, port, host_name, ip, name, client_name):
+def incoming(connection, client_name):
     while True:
         cmessage = connection.recv(1024)
         cmessage = cmessage.decode()
         print(client_name, " >>> ", cmessage)
 
-threading.Thread(target = chatRoom(soc, connection, addr, port, host_name, ip, name, client_name)).start()
-threading.Thread(target = incoming(soc, connection, addr, port, host_name, ip, name, client_name)).start()
+threading.Thread(target = chatRoom()).start()
+threading.Thread(target = incoming(connection, client_name)).start()
