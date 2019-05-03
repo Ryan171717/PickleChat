@@ -1,14 +1,13 @@
 # import all necesary modules
 from tkinter import *
 import socket
-import sys
-import time
-import thread
+
+import threading
 #create a port to communicate on
 port = 1234
 
 #self ip address for testing if firewall on network
-#127.0.0.1
+#ip = '127.0.0.1'
 
 #create variables for the name of the internet server, ip adress and variable soc for later function calls with socket
 soc = socket.socket()
@@ -29,16 +28,17 @@ def start(nameEnter, screen):
 def startMenu(soc, host_name, ip):
     #creates screen and title
     screen = Tk()
+
     screen.title("PickleChat Menu")
-   
-    screen.bind(<Enter>, start(nameEnter, screen))
-    
+
     #combines ip and network name to be printed in a label
     h_ip = host_name + " ({})".format(ip)
-    host_ip = Label(screen, text = h_ip)
+    host_ip = Label(screen, text=str(h_ip))
     #places label
     host_ip.grid(column = 0, row = 0)
-    
+
+
+
     #creates a label to tell user to enter their desired username below
     nameBox = Label(screen, text = "Enter name below:")
     nameBox.grid(column = 0, row = 1)#places label in second row
@@ -51,7 +51,11 @@ def startMenu(soc, host_name, ip):
     stb = Button(screen, text = "Start with username above", fg = "blue", command = lambda : start(nameEnter, screen))
     stb.grid(column = 0, row = 3)
 
-    screen.mainloop()#inserts the window into the main loop creating it
+
+
+    screen.mainloop()
+
+ #inserts the window into the main loop creating it
 #calls start menu screen to open creating isolated start menu screen
 startMenu(soc, host_name, ip)
 #--------------------------------------------------------
@@ -64,7 +68,7 @@ print("Username: ",name)
 print("Waiting for incoming connections...")
 
 #waits for incoming connections
-soc.listen(5)
+soc.listen(1)
 
 #accepts connections
 connection, addr = soc.accept()
@@ -81,8 +85,8 @@ print(client_name, "has joined your PickleChat server")
 #message is set equal to the contents of the message box
 #sends message
 #deletes content from message box
-def sendf(messageBox):
-    message = messageBox.get()
+
+def sendf(messageBox, message):
     connection.send(message.encode())
     messageBox.delete(0, END)
 #creates the gui for the main pickle chat app
@@ -97,18 +101,20 @@ def chatRoom(soc, connection, addr, port, host_name, ip, name, client_name):
     #calls the sendf function with messageBox parameter
     sendButton = Button(window, text = "SEND", command = lambda : sendf(messageBox))
     sendButton.grid(column = 0, row = 0)
-    
-    window.bind(<Enter>, sendf(messageBox)
 
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
-            
+
+    message = messageBox.get()
+    window.bind("<Enter>", sendf)
     window.mainloop()
+
 def incoming(soc, connection, addr, port, host_name, ip, name, client_name):
     while True:
         cmessage = connection.recv(1024)
         cmessage = cmessage.decode()
         print(client_name, " >>> ", cmessage)
+
 threading.Thread(target = chatRoom(soc, connection, addr, port, host_name, ip, name, client_name)).start()
 threading.Thread(target = incoming(soc, connection, addr, port, host_name, ip, name, client_name)).start()
