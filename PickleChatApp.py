@@ -1,7 +1,7 @@
 # import all necesary modules
 from tkinter import *
 import socket
-from threading import Thread
+import ray
 #create a port to communicate on
 port = 1234
 
@@ -83,32 +83,34 @@ print(client_name, "has joined your PickleChat server")
 #sends message
 #deletes content from message box
 
+ray.init()
+
 def sendf(connection, messageBox, message):
     connection.send(message.encode())
     messageBox.delete(0, END)
 #creates the gui for the main pickle chat app
 
+@ray.remote
 def chatRoom(conection):
     window = Tk()
     window.title("PickleChat")
     #creates file title and dimensions of window
     window.geometry("450x700")
 
-    #placed at the top
-    #calls the sendf function with messageBox parameter
     
 
     #creates the entry box for your message
     messageBox = Entry(window, width = 48)
     messageBox.grid(column = 0, row = 1)
     message = messageBox.get()
-    sendButton = Button(window, text = "SEND", command = lambda: sendf(messageBox, message))
+    sendButton = Button(window, text = "SEND", command = lambda: sendf(connection, messageBox, message))
     sendButton.grid(column = 0, row = 0)
 
     
     window.bind("<Enter>", lambda event: sendf(connection, messageBox, message))
     window.mainloop()
-
+    
+@ray.remote
 def incoming(connection, client_name):
     while True:
         cmessage = connection.recv(1024)
@@ -117,6 +119,5 @@ def incoming(connection, client_name):
             print(client_name, " >>> ", cmessage)
 
 
-if __name__ == '__main__':       
-    Thread(target = chatRoom(connection)).start()
-    Thread(target = incoming(connection, client_name)).start()
+
+ray.get([chatRoom.remote(), incoming.remote()])
