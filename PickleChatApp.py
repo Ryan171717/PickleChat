@@ -1,8 +1,7 @@
 # import all necesary modules
 from tkinter import *
 import socket
-
-import threading
+from threading import Thread
 #create a port to communicate on
 port = 1234
 
@@ -84,12 +83,12 @@ print(client_name, "has joined your PickleChat server")
 #sends message
 #deletes content from message box
 
-def sendf(messageBox, message):
+def sendf(connection, messageBox, message):
     connection.send(message.encode())
     messageBox.delete(0, END)
 #creates the gui for the main pickle chat app
 
-def chatRoom():
+def chatRoom(conection):
     window = Tk()
     window.title("PickleChat")
     #creates file title and dimensions of window
@@ -107,14 +106,17 @@ def chatRoom():
     sendButton.grid(column = 0, row = 0)
 
     
-    window.bind("<Enter>", lambda event: sendf(messageBox, message))
+    window.bind("<Enter>", lambda event: sendf(connection, messageBox, message))
     window.mainloop()
 
 def incoming(connection, client_name):
     while True:
         cmessage = connection.recv(1024)
         cmessage = cmessage.decode()
-        print(client_name, " >>> ", cmessage)
+        if cmessage != "":
+            print(client_name, " >>> ", cmessage)
 
-threading.Thread(target = chatRoom()).start()
-threading.Thread(target = incoming(connection, client_name)).start()
+
+if __name__ == '__main__':       
+    Thread(target = chatRoom(connection)).start()
+    Thread(target = incoming(connection, client_name)).start()
