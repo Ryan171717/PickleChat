@@ -6,12 +6,12 @@ from threading import Thread
 port = 1234
 
 #self ip address for testing if firewall on network
-ip = '127.0.0.1'
+#ip = '127.0.0.1'
 
 #create variables for the name of the internet server, ip adress and variable soc for later function calls with socket
 soc = socket.socket()
 host_name = socket.gethostname()
-#ip = socket.gethostbyname(host_name)
+ip = socket.gethostbyname(host_name)
 
 #gets username then exits the start menu and opens the picklechat main communication page
 def start(nameEnter, screen):
@@ -36,7 +36,7 @@ def startMenu(soc, host_name, ip):
     #places label
     host_ip.grid(column = 0, row = 0)
 
-
+    
 
     #creates a label to tell user to enter their desired username below
     nameBox = Label(screen, text = "Enter name below:")
