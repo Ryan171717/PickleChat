@@ -1,17 +1,17 @@
 # import all necesary modules
 from tkinter import *
 import socket
-import ray
+from threading import Thread
 #create a port to communicate on
 port = 1234
 
 #self ip address for testing if firewall on network
-#ip = '127.0.0.1'
+ip = '127.0.0.1'
 
 #create variables for the name of the internet server, ip adress and variable soc for later function calls with socket
 soc = socket.socket()
 host_name = socket.gethostname()
-ip = socket.gethostbyname(host_name)
+#ip = socket.gethostbyname(host_name)
 
 #gets username then exits the start menu and opens the picklechat main communication page
 def start(nameEnter, screen):
@@ -58,6 +58,7 @@ def startMenu(soc, host_name, ip):
 #calls start menu screen to open creating isolated start menu screen
 startMenu(soc, host_name, ip)
 #--------------------------------------------------------
+
 soc.bind((host_name, port))
 
 #prints your username in the main ide
@@ -83,14 +84,14 @@ print(client_name, "has joined your PickleChat server")
 #sends message
 #deletes content from message box
 
-ray.init()
+
 
 def sendf(connection, messageBox, message):
     connection.send(message.encode())
     messageBox.delete(0, END)
 #creates the gui for the main pickle chat app
 
-@ray.remote
+
 def chatRoom(conection):
     window = Tk()
     window.title("PickleChat")
@@ -107,10 +108,10 @@ def chatRoom(conection):
     sendButton.grid(column = 0, row = 0)
 
     
-    window.bind("<Enter>", lambda event: sendf(connection, messageBox, message))
+    messageBox.bind("<Enter>", lambda event: sendf(connection, messageBox, message))
     window.mainloop()
     
-@ray.remote
+
 def incoming(connection, client_name):
     while True:
         cmessage = connection.recv(1024)
@@ -118,6 +119,7 @@ def incoming(connection, client_name):
         if cmessage != "":
             print(client_name, " >>> ", cmessage)
 
-
-
-ray.get([chatRoom.remote(), incoming.remote()])
+startChat = chatRoom(connection)
+recvMessage = incoming(connection, client_name)
+startChat.start()
+recvMessage.start()
