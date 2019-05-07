@@ -91,9 +91,7 @@ def sendf(connection, messageBox):
     connection.send(message.encode())
     messageBox.delete(0, END)
 
-
 # creates the gui for the main pickle chat app
-
 
 def chatRoom(connection):
     window = Tk()
@@ -111,13 +109,15 @@ def chatRoom(connection):
     messageBox.bind("<Enter>", sendf(connection, messageBox))
     window.mainloop()
 
-
 def incoming(connection, client_name):
     while True:
         cmessage = connection.recv(1024)
         cmessage = cmessage.decode()
         if cmessage != "":
             print(client_name, " >>> ", cmessage)
+
+
+
 
 
 startChat = chatRoom(connection)
