@@ -1,6 +1,5 @@
 # import all necesary modules
 from tkinter import Button, Label, Entry
-from tkinter import Tk
 import socket
 from threading import Thread
 
@@ -29,7 +28,7 @@ def start(nameEnter, screen):
 
 def startMenu(host_name, ip):
     # creates screen and title
-    screen = Tk()
+    screen = tkinter.Tk()
     screen.title("PickleChat Menu")
     # combines ip and network name to be printed in a label
     h_ip = host_name + " ({})".format(ip)
@@ -87,7 +86,7 @@ def sendf(connection, messageBox):
     messageBox.delete(0, END)
 
 def chatRoom(connection):
-    window = Tk()
+    window = tkinter.Tk()
     window.title("PickleChat")
     # creates file title and dimensions of window
     window.geometry("450x700")
