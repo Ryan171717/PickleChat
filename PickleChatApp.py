@@ -1,5 +1,5 @@
 # import all necesary modules
-from tkinter import Button, Label, Entry
+from tkinter import Button, Label, Entry, Tk, END
 import socket
 from threading import Thread
 
@@ -28,7 +28,7 @@ def start(nameEnter, screen):
 
 def startMenu(host_name, ip):
     # creates screen and title
-    screen = tkinter.Tk()
+    screen = Tk()
     screen.title("PickleChat Menu")
     # combines ip and network name to be printed in a label
     h_ip = host_name + " ({})".format(ip)
@@ -44,7 +44,7 @@ def startMenu(host_name, ip):
 
     nameEnter = Entry(screen, width=25)
     nameEnter.grid(column=0, row=2)
-    nameEnter.bind("<Enter>", lambda event: start(nameEnter, screen))
+    screen.bind("<Return>", lambda event: start(nameEnter, screen))
      # start button
     stb = Button(screen, text="Start with username above", fg="blue", command=lambda: start(nameEnter, screen))
     stb.grid(column=0, row=3)
@@ -56,7 +56,10 @@ startMenu(host_name, ip)
 
 # --------------------------------------------------------
 soc = socket.socket()
-soc.bind((host_name, port))
+try:
+    soc.bind((host_name, port))
+except OSError:
+    print("Restart the server side and client side shell and try again.")
 
 # prints your username in the main ide
 print("Username: ", name)
@@ -86,7 +89,7 @@ def sendf(connection, messageBox):
     messageBox.delete(0, END)
 
 def chatRoom(connection):
-    window = tkinter.Tk()
+    window = Tk()
     window.title("PickleChat")
     # creates file title and dimensions of window
     window.geometry("450x700")
@@ -98,7 +101,7 @@ def chatRoom(connection):
     sendButton = Button(window, text="SEND", bg="red", fg="black", command=lambda: sendf(connection, messageBox))
     sendButton.grid(column=0, row=0)
 
-    messageBox.bind("<Enter>", sendf(connection, messageBox))
+    window.bind("<Return>", lambda event: sendf(connection, messageBox))
     window.mainloop()
 
 def incoming(connection, client_name):
@@ -113,6 +116,3 @@ recvMessage = incoming(connection, client_name)
 
 Thread(startChat).start()
 Thread(recvMessage).start()
-
-
-
