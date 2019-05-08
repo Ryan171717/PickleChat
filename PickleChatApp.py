@@ -112,7 +112,11 @@ def incoming(connection, client_name):
             print(client_name, " >>> ", cmessage)
 
 
-if __name__ == '__main__':
-    Thread(target = chatRoom(connection)).start()
-    Thread(target = incoming(connection, client_name)).start()
 
+
+msin = Thread(target = incoming, args = (connection, client_name))
+cr = Thread(target = chatRoom, args = (connection))
+
+
+msin.start()
+cr.start()
