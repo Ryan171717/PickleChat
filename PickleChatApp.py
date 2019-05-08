@@ -111,8 +111,8 @@ def incoming(connection, client_name):
         if cmessage != "":
             print(client_name, " >>> ", cmessage)
 
-startChat = chatRoom(connection)
-recvMessage = incoming(connection, client_name)
 
-Thread(startChat).start()
-Thread(recvMessage).start()
+if __name__ == '__main__':
+    Thread(target = chatRoom, args = connection).start()
+    Thread(target = incoming, args = connection, client_name).start()
+
