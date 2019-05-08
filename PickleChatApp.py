@@ -113,6 +113,6 @@ def incoming(connection, client_name):
 
 
 if __name__ == '__main__':
-    Thread(target = chatRoom, args = connection).start()
-    Thread(target = incoming, args = connection, client_name).start()
+    Thread(target = chatRoom(connection)).start()
+    Thread(target = incoming(connection, client_name)).start()
 
