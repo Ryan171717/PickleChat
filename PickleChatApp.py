@@ -57,7 +57,7 @@ startMenu(host_name, ip)
 # --------------------------------------------------------
 soc = socket.socket()
 try:
-    soc.bind((host_name, port))
+    soc.bind((ip, port))
 except OSError:
     print("Restart the server side and client side shell and try again.")
 
@@ -114,9 +114,6 @@ def incoming(connection, client_name):
 
 
 
-msin = Thread(target = incoming, args = (connection, client_name))
-cr = Thread(target = chatRoom, args = (connection))
-
-
-msin.start()
-cr.start()
+if __name__ == "__main__":
+    Thread(target = incoming(connection, client_name)).start()
+    Thread(target = chatRoom(connection)).start()
