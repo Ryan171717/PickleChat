@@ -1,11 +1,16 @@
 
 # import all necesary modules
+#tkinter for GUI
 from tkinter import *
+#socket for connection 
 import socket
+#threading for running multiple functions at once
 from threading import Thread
+#time for pauses
 import time
+#requests for getting images from internet
 import requests
-
+#random for choosing random image
 import random
 
 
@@ -62,6 +67,10 @@ def sendf(connection, messageBox, mylist):
     message = messageBox.get()
     connection.send(message.encode())
     messageBox.delete(0, END)
+    
+    pm = "ME >>> " + message
+    
+    mylist.insert(END, pm)
 
 def chatRoom(connection):
 
@@ -97,15 +106,15 @@ def incoming(connection, client_name, mylist):
             mylist.insert(END, m)
 
 
-'''
-def picture():
-    urls = ['https://ih0.redbubble.net/image.431046411.5619/flat,550x550,075,f.u2.jpg', 'http://clipart-library.com/images/BTgAzRKoc.jpg', 'https://ih1.redbubble.net/image.393372236.1994/ap,550x550,12x12,1,transparent,t.u2.png', 'https://cdn3.vectorstock.com/i/1000x1000/67/12/cartoon-happy-pickle-giving-a-thumb-up-vector-23676712.jpg', 'https://ya-webdesign.com/transparent250_/cartoon-pickle-png.png']
-    url = random.choice(urls)
-    img_data = requests.get(url).content
-    with open('url', 'wb') as handler:
-        handler.write(img_data)
 
-'''
+def picture():
+    urls = ['http://clipart-library.com/images/ki8o54ybT.png', 'http://clipart-library.com/image_gallery/7951.jpg', 'https://cdn5.vectorstock.com/i/thumb-large/78/54/pickle-cartoon-character-with-attitude-vector-21537854.jpg', 'http://clipart-library.com/images/BTgAzRKoc.jpg', 'http://clipart-library.com/images/qTBXoggBc.jpg']
+    url = random.choice(urls)
+    r = requests.get(url, allow_redirects=True)
+    open('google.ico', 'wb').write(r.content)
+    return (google.ico)
+
+
 
 
 
@@ -130,7 +139,15 @@ def main():
     waiting_screen = Tk()
     waiting_screen.geometry("{0}x{1}+0+0".format(waiting_screen.winfo_screenwidth(), waiting_screen.winfo_screenheight()))
     waiting_screen.title("Waiting")
+    
+    pic = picture()
+    x = (waiting_screen.winfo_screenwidth())//2
+    y = (waiting_screen.winfo_screenheight())//2
+    
+    window.create_image(x,y, anchor=center, image=pic)      
 
+    
+    
     name_display = Label(waiting_screen, text = "Please wait for a connection...")
     name_display.grid(column = 0, row = 0)
 
