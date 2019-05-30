@@ -47,7 +47,7 @@ with open("UserPassword_log.txt") as f:
        (key, val) = line.split()
        pass_dict[key] = val
 
-def login(pass_dict, user1):
+def login(pass_dict''', user1'''):
     while True:
         name = input("Enter name\n")
         password= input("Enter password\n")
@@ -63,9 +63,25 @@ def login(pass_dict, user1):
             print("Try again")
 
 
-def create_user(pass_dict):
+def create_user():
     host_name = socket.gethostname()
-    ip = socjet.gethostbyname(host_name)
+    ip = socket.gethostbyname(host_name)
     username = input("Enter username:\n")
     password = input("Enter password\n")
+    exec('%s = User % (username, (username, password, ip)))
+
+    
+    
+    
+while True:
+    selection = input("Would you like to create a new user(y) or login to to a pre-existing account(n).  To exit enter 'e'? (y/n/e)\n")
+    if selection == 'y':
+        create_user()
+    if selection == 'n':
+         login(pass_dict)
+    if selection == 'e':
+         break
+    else:
+         print('Try a different key')
+            
     
