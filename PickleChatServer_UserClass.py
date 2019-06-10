@@ -77,7 +77,12 @@ def login(pass_dict):
 def create_user():
     host_name = socket.gethostname()
     ip = socket.gethostbyname(host_name)
-    username = input("Enter username:\n")
+    while True:
+        username = input("Enter username:\n")
+        if username !in user_dict:
+            break
+        else:
+            print("Try a different username")
     name = username
     password = input("Enter password\n")
     user_dict[name] = User(username, password, ip)
