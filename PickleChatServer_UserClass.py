@@ -79,7 +79,7 @@ def create_user():
     ip = socket.gethostbyname(host_name)
     while True:
         username = input("Enter username:\n")
-        if username !in user_dict:
+        if username not in user_dict:
             break
         else:
             print("Try a different username")
