@@ -1,6 +1,6 @@
 import socket
 import random
-
+print(socket.gethostbyname(socket.gethostname()))
 
 class User:
     def __init__(self, username, password, ip):
@@ -97,10 +97,17 @@ def create_user():
             pass_dict[key] = val
     return user_dict[name]
 def main():
+    soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host_name = socket.gethostname()
+    ip = socket.gethostbyname(host_name)
+    port = 55555
+    soc.bind((host_name, port))
+    connection = soc.accept()
     global user_dict
     user_dict = {}
     while True:
-        selection = input("To create a new account enter (y). To login to to a pre-existing account enter (n).  To exit enter 'e'. (y/n/e)\n")
+        selection = connection.recvall()
+        selection = selection.decode()
 
         if selection == 'y':
             create_user()
