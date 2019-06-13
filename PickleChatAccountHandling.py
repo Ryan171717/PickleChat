@@ -15,8 +15,9 @@ def addAttrs(key, user_num):
     tempAttrList = []
     for attr in attrs:
         tempAttrList.append(attr)
-        AttrList.append(tempAttrList)
-        user_dict[key] = user_num
+    AttrList.append(tempAttrList)
+    user_dict[key] = user_num
+    user_num+=1
                         
         
 
@@ -37,7 +38,6 @@ class User:
             f.write('\n')
             
             GetUsers(user_dict, AttrList, user_num)
-            user_num += 1
     def assign_message(self):
         messages =  ['hello.world', 'how.are.you', 'it.tastes.like.a.bologna.ball', 'doesnt.taste.like.much',
                     'that.was.the.plan', 'welp.that.didnt.work']
