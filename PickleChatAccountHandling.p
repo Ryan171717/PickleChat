@@ -35,8 +35,9 @@ class User:
             f_message = password+'_'+ip+'_'+message
             f.write(f_message)
             f.write('\n')
-            user_num += 1
+            
             GetUsers(user_dict, AttrList, user_num)
+            user_num += 1
     def assign_message(self):
         messages =  ['hello.world', 'how.are.you', 'it.tastes.like.a.bologna.ball', 'doesnt.taste.like.much',
                     'that.was.the.plan', 'welp.that.didnt.work']
@@ -49,7 +50,6 @@ def main():
     user_dict = {}
     global AttrList
     AttrList = []
-
     user_num = 0
     GetUsers(user_dict, AttrList, user_num)
     u2 = User('adam', 'ninja', 'alisonHojlo', user_num)
