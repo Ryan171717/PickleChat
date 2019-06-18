@@ -10,6 +10,7 @@ def GetUsers(user_dict, AttrList, user_num):
             key, val = line.split()
             user_dict[key] = val
             addAttrs(key, user_num)
+            user_num += 1
 def addAttrs(key, user_num):
     attrs = user_dict[key].split('_')
     tempAttrList = []
@@ -36,15 +37,19 @@ class User:
             f_message = password+'_'+ip+'_'+message
             f.write(f_message)
             f.write('\n')
-            
+            user_num += 1
             GetUsers(user_dict, AttrList, user_num)
+            
     def assign_message(self):
         messages =  ['hello.world', 'how.are.you', 'it.tastes.like.a.bologna.ball', 'doesnt.taste.like.much',
                     'that.was.the.plan', 'welp.that.didnt.work']
         return random.choice(messages)
+def printMessage(message):
+    m = ' '
+    return m.join(message)
     
+
 def main():
-    user_num = user_num_update()
 
     global user_dict
     user_dict = {}
@@ -52,7 +57,9 @@ def main():
     AttrList = []
     user_num = 0
     GetUsers(user_dict, AttrList, user_num)
-    u2 = User('adam', 'ninja', 'alisonHojlo', user_num)
+    #u2 = User('adam', 'ninja', 'alisonHojlo', user_num)
     print(user_dict)
+    print(printMessage(AttrList[user_dict['adam']][2].split('.')))
+    
     
 main()
