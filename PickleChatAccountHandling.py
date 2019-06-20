@@ -44,9 +44,20 @@ class User:
         messages =  ['hello.world', 'how.are.you', 'it.tastes.like.a.bologna.ball', 'doesnt.taste.like.much',
                     'that.was.the.plan', 'welp.that.didnt.work']
         return random.choice(messages)
-def printMessage(message):
-    m = ' '
-    return m.join(message)
+def printAttribute(attr, attr_num):
+
+    if attr_num == 2:
+        m = ''
+        for letter in attr:
+            if letter != '.':
+                m+= letter
+            if letter == '.':
+                m+= ' '
+        return m
+                
+    if attr_num == 0 or 1:
+        return attr
+    
     
 
 def main():
@@ -57,9 +68,20 @@ def main():
     AttrList = []
     user_num = 0
     GetUsers(user_dict, AttrList, user_num)
-    #u2 = User('adam', 'ninja', 'alisonHojlo', user_num)
-    print(user_dict)
-    print(printMessage(AttrList[user_dict['adam']][2].split('.')))
     
+    print(user_dict)
+    while True:
+        attr = input("What attribute would you like to find? (ip, password, message)\n")
+        if attr != 'message':
+            if attr == 'ip':
+                attr_num = 1
+            if attr == 'password':
+                attr_num = 0
+            name = input("Enter username of the user you would like to find the attribute for:\n")
+            print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
+        if attr == 'message':
+            attr_num = 2
+            name =input("Enter username of the user you would like to find the attribute for:\n")
+            print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
     
 main()
