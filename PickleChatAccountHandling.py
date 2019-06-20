@@ -58,19 +58,23 @@ def printAttribute(attr, attr_num):
     if attr_num == 0 or 1:
         return attr
     
-    
-
-def main():
-
-    global user_dict
-    user_dict = {}
-    global AttrList
-    AttrList = []
-    user_num = 0
-    GetUsers(user_dict, AttrList, user_num)
-    
-    print(user_dict)
-    while True:
+def create_user():
+        while True:
+            new = input("Would you like to create a new user: (y/n)")
+            if new == 'y':
+                username = input("Enter username\n")
+            while True:
+                    password = input("Enter password\n")
+                    confirmation = input("Enter password again\n")
+                    if password == confirmation:
+                        break
+                    else:
+                        print("Make sure you type the same password")
+            ip = socket.gethostbyname(socket.gethostname())
+            User(username, password, ip, user_num)
+            if new == 'n':
+                return
+def accessAttribute():
         attr = input("What attribute would you like to find? (ip, password, message)\n")
         if attr != 'message':
             if attr == 'ip':
@@ -83,5 +87,23 @@ def main():
             attr_num = 2
             name =input("Enter username of the user you would like to find the attribute for:\n")
             print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
+def main():
+
+    global user_dict
+    user_dict = {}
+    global AttrList
+    AttrList = []
+    global user_num
+    user_num = 0
+    GetUsers(user_dict, AttrList, user_num)
+
+    print(user_dict)
+    while True:
+        choice = input("Would you like to create a new user or access an attribute? (new/access)\n")
+        if choice == 'new':
+            create_user()
+        if choice == 'access':
+            accessAttribute()
+
     
 main()
