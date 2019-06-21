@@ -31,8 +31,9 @@ class User:
         self.update_log(self.username, self.password, self.ip, self.message, user_num)
 
     def update_log(self, username, password, ip, message, user_num):
+        user_dict.update({username: user_num})
         with open("UserInfo.txt", 'a+') as f:
-            f.write(self.username)
+            f.write(username)
             f.write(' ')
             f_message = password+'_'+ip+'_'+message
             f.write(f_message)
@@ -42,7 +43,7 @@ class User:
             
     def assign_message(self):
         messages =  ['hello.world', 'how.are.you', 'it.tastes.like.a.bologna.ball', 'doesnt.taste.like.much',
-                    'that.was.the.plan', 'welp.that.didnt.work']
+                    'that.was.the.plan', 'welp.that.didnt.work', 'only.one.way.to.find.out']
         return random.choice(messages)
 def printAttribute(attr, attr_num):
 
@@ -62,16 +63,20 @@ def create_user():
         while True:
             new = input("Would you like to create a new user: (y/n)")
             if new == 'y':
-                username = input("Enter username\n")
-            while True:
-                    password = input("Enter password\n")
-                    confirmation = input("Enter password again\n")
-                    if password == confirmation:
-                        break
-                    else:
-                        print("Make sure you type the same password")
-            ip = socket.gethostbyname(socket.gethostname())
-            User(username, password, ip, user_num)
+                username = ' '
+                while ' ' in username:
+                    username = input("Enter username\n")
+                    if ' ' in username:
+                        print('try again. use only letters and characters other than {} and {}'.format("'_'", 'spaces'))
+                while True:
+                        password = input("Enter password\n")
+                        confirmation = input("Enter password again\n")
+                        if password == confirmation:
+                            break
+                        else:
+                            print("Make sure you type the same password")
+                ip = socket.gethostbyname(socket.gethostname())
+                User(username, password, ip, user_num)
             if new == 'n':
                 return
 def accessAttribute():
@@ -95,6 +100,7 @@ def main():
     AttrList = []
     global user_num
     user_num = 0
+    
     GetUsers(user_dict, AttrList, user_num)
 
     print(user_dict)
