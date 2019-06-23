@@ -1,14 +1,11 @@
 import socket, random
-def user_num_update():
-    with open("UserNum.txt") as f:
-        user_num= f
-    return(user_num)
+
 
 def GetUsers(user_dict, AttrList, user_num):
     user_dict = {}
     user_num = 0
     AttrList = []
-    with open('UserInfo.txt') as f:
+    with open('UserInfo.txt', 'a+') as f:
         AttrList = []
         for line in f:
             name, val = line.split()
@@ -101,35 +98,39 @@ def create_user():
                 
             if new == 'n':
                 return
-def accessAttribute():
-        print(AttrList, '\n', user_dict)
-        attr = input("What attribute would you like to find? (ip, password, message)\n")
-        if attr != 'message':
-            if attr == 'ip':
-                attr_num = 1
-            if attr == 'password':
-                attr_num = 0
-        if attr == 'message':
-            attr_num = 2
-        if attr != 'ip':
-            while True:
-                name =input("Enter username of the user you would like to find the attribute for:\n")
-                password = input("Enter your password\n")
-                if password == AttrList[user_dict[name]][0]:
-                    login = True
-                    break
-                else:
-                    print("Password is incorrect. Would you like to exit or try again? (exit/again)")
-                    choice = input()
-                    if choice == 'exit':
-                        login = False
+def accessAttribute(s):
+            s.sendall(AttrList, '\n', user_dict)
+            s.sendall("What attribute would you like to find? (ip, password, message)\n")
+            attr = s.recv(1024)
+            if attr != 'message':
+                if attr == 'ip':
+                    attr_num = 1
+                if attr == 'password':
+                    attr_num = 0
+            if attr == 'message':
+                attr_num = 2
+            if attr != 'ip':
+                while True:
+                    s.sendall("Enter username of the user you would like to find the attribute for:\n")
+                    name = s.recv(1024)
+                    s.sendall("Enter your password\n")
+                    s.recv(1024)
+                    if password == AttrList[user_dict[name]][0]:
+                        login = True
                         break
-                    if choice == 'again':
-                        continue
-            
-        if login == True or attr == 'ip':
-            print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
-            print(AttrList, '\n', user_dict)
+                    else:
+                        s.sendall("Password is incorrect. Would you like to exit or try again? (exit/again)")
+                        choice = s.recv(1024)
+                        if choice == 'exit':
+                            login = False
+                            break
+                        if choice == 'again':
+                            continue
+                
+            if login == True or attr == 'ip':
+                s.sendall(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
+                s.sendall(AttrList, '\n', user_dict)
+        
 def main():
 
     global user_dict
@@ -140,17 +141,32 @@ def main():
     user_num = 0
     
     user_dict = GetUsers(user_dict, AttrList, user_num)
+    
 
-    print(user_dict)
-    print(AttrList)
-    while True:
-        choice = input("Would you like to create a new user or access an attribute? (new/access)\n")
-        if choice == 'new':
-            create_user()
-        if choice == 'access':
-            accessAttribute()
-        if choice =='break':
-            break
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    port = 1234
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        message = "{} \n {}".format(AttrList,user_dict)
+        s.sendall(message)
+        s.bind((hostname, port))
+        s.listen()
+        
+        connection, addr = s.accept()
+        print('connected by {}'.format(addr))
+        
+
+    
+        while True:
+            message = ("Would you like to create a new user or access an attribute? (nwe/access)\n")
+            s.sendall(message)
+            choice = s.recv(1024)
+            if choice == 'new':
+                create_user()
+            if choice == 'access':
+                accessAttribute(s)
+            if choice =='break':
+                break
 
     
 main()
