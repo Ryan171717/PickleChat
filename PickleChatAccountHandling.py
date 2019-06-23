@@ -57,7 +57,14 @@ class User:
             tempAttrList.append(attr)
         AttrList.append(tempAttrList)
         user_dict[self.username] = len(user_dict)-1
-    
+    def changeMessage(self, new_message, username):
+        self.message = new_message
+        AttrList[user_dict[self.username]][2] = self.message
+    def changePassword(self, new_password, username):
+        self.password == new_password
+        AttrList[user_dict[self.username]][0] = self.password
+
+
 def printAttribute(attr, attr_num):
 
     if attr_num == 2:
@@ -102,13 +109,26 @@ def accessAttribute():
                 attr_num = 1
             if attr == 'password':
                 attr_num = 0
-            name = input("Enter username of the user you would like to find the attribute for:\n")
-            print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
         if attr == 'message':
             attr_num = 2
+        while True:
             name =input("Enter username of the user you would like to find the attribute for:\n")
-        print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
-        print(AttrList, '\n', user_dict)
+            password = input("Enter your password\n")
+            if password == AttrList[user_dict[name]][0]:
+                login = True
+                break
+            else:
+                print("Password is incorrect. Would you like to exit or try again? (exit/again)")
+                choice = input()
+                if choice == 'exit':
+                    login = False
+                    break
+                if choice == 'again':
+                    continue
+            
+        if login == True:
+            print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
+            print(AttrList, '\n', user_dict)
 def main():
 
     global user_dict
