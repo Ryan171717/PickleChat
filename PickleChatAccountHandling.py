@@ -111,22 +111,23 @@ def accessAttribute():
                 attr_num = 0
         if attr == 'message':
             attr_num = 2
-        while True:
-            name =input("Enter username of the user you would like to find the attribute for:\n")
-            password = input("Enter your password\n")
-            if password == AttrList[user_dict[name]][0]:
-                login = True
-                break
-            else:
-                print("Password is incorrect. Would you like to exit or try again? (exit/again)")
-                choice = input()
-                if choice == 'exit':
-                    login = False
+        if attr != 'ip':
+            while True:
+                name =input("Enter username of the user you would like to find the attribute for:\n")
+                password = input("Enter your password\n")
+                if password == AttrList[user_dict[name]][0]:
+                    login = True
                     break
-                if choice == 'again':
-                    continue
+                else:
+                    print("Password is incorrect. Would you like to exit or try again? (exit/again)")
+                    choice = input()
+                    if choice == 'exit':
+                        login = False
+                        break
+                    if choice == 'again':
+                        continue
             
-        if login == True:
+        if login == True or attr == 'ip':
             print(printAttribute(AttrList[user_dict[name]][attr_num], attr_num))
             print(AttrList, '\n', user_dict)
 def main():
