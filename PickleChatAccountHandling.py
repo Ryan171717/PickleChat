@@ -1,19 +1,31 @@
 import socket, random
 
 class User:
-    def __init__(self, username, password, ip):
+    def __init__(self, username, password, ip, *kwargs):
         self.password = password
         self.username = username
         self.ip = ip
-        user_dict.update({username:username})
-        self.message = self.assignMessage()
+        if kwargs:
+            self.message = kwargs
+        else:
+            self.message = self.assignMessage()
+        file = open('Users.txt').read()
         with open("Users.txt", 'a+') as f:
-            f.write('{}{}'.format(self.username, '\n'))
-        self.createFile(self.username, self.password, self.ip, self.message)
-
-    def createFile(self, username, password, ip, message):
+            add = True
+            if self.username in file:
+                add = False
+            if add:
+                f.write('{}{}'.format(self.username, '\n'))
+        if not kwargs:
+            self.createFile(self.username, self.password, self.ip, self.message)
+        print('here here')
+    def createFile(self, username, password, ip, message, **kwargs):
+        print('here here')
         with open("{}_UserFile.txt".format(username), 'w+') as f:
-            f.write("{} {} {} {}".format(username, password, ip, message))
+            if '.' not in f or kwargs is True:
+                parts = [self.username, '\n', self.password,'\n', self.ip,'\n', self.message]
+                for part in parts:
+                    f.write('{}'.format(part))
     def assignMessage(self):
         defaultMessages = ['hello world', 'how are you', 'it tastes like a bologna ball',
                           'doesnt taste like much','that was the plan', 'welp that didnt work',
@@ -23,18 +35,19 @@ class User:
         passcode = input("Enter your password:\n")
         if passcode == self.password:
             self.message = new_message
-            self.createFile(self.username, self.password, self.ip, self.message)
+            self.createFile(self.username, self.password, self.ip, self.message, True)
     def changePassword(self, password):
         original = input("Enter original password:\n")
         if original == self.password:
             new_password = input("Enter your new password:\n")
             self.password = new_password
-            self.createFile(self.username, self.password, self.ip, self.message)
+            self.createFile(self.username, self.password, self.ip, self.message, True)
             print("Password change successful")
     def printAttr(self, name, attr):
         if attr == 'message':
             passcode = input("Enter your password:\n")
-            if passcode == self.password:
+            print(user_dict[name])
+            if passcode == user_dict[name].password:
                 print(self.message)
         elif attr == 'ip':
             print(user_dict[name].ip)
@@ -42,7 +55,8 @@ class User:
             passcode = input("Enter your password:\n")
             if passcode == self.password:
                 print(self.password)
-def choices():
+def choices(user_dict):
+     print(user_dict)
      while True:
             choice = input('Would you like to create a new user? (y/n)\n')
             if choice == 'y':
@@ -54,12 +68,13 @@ def choices():
                         break
                     print('Make sure both passwords are the same.')
                 ip = socket.gethostbyname(socket.gethostname())
-                User(username, password, ip)
+                user_dict[username] = User(username, password, ip)
             if choice == 'n':
                 print(user_dict)
                 choice = input('Would you like to access an attribute?(y/n)\n')
                 if choice == 'y':
-                    User.printAttr(user_dict[input("Username")], input("Which attribute?\n"))
+                    name = user_dict[input("Username")]
+                    User.printAttr(name , name, input("Which attribute?\n"))
                 if choice == 'n':
                     choice = input("Would you like to change username or password? (message/password)")
                     if choice == 'message':
@@ -74,18 +89,21 @@ def choices():
 def main():
     global user_dict
     user_dict ={}
-    try:
-        with open("Users.txt") as f:
-            for line in f:
-                if line:
-                    username = line
-                    with open("{}_UserFile.txt".format(username), 'r+') as u:
-                        if '.' in u:
-                            for line in u:
-                                username, password, ip, message = line.split()
-                                User(username, password, ip, message)
-    except FileNotFoundError:
-       choices()
-    choices()
-                    
+   # try:
+    with open("Users.txt", 'r+') as f:
+        for line in f:
+            if line != '':
+                username = line
+                print('here')
+                file = '{}_UserFile.txt'.format(username.strip('\n'))
+                if file != '_UserFile.txt':
+                    with open(file, 'r+') as u:
+                        attrs = [username]
+                        for line in u:
+                            attrs.append(line)
+                            print(attrs)
+                        user_dict[username.strip('\n')] = User(username, username, attrs[0], attrs[1], attrs[2])
+ #   except FileNotFoundError:
+     #  choices()
+    choices(user_dict)sss                    
 main()
