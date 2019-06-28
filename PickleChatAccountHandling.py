@@ -7,7 +7,7 @@ class User:
         self.ip = ip
         if kwargs:
             self.message = kwargs
-        else:
+        else: 
             self.message = self.assignMessage()
         file = open('Users.txt').read()
         with open("Users.txt", 'a+') as f:
@@ -46,24 +46,27 @@ class User:
     def printAttr(self, name, attr):
         if attr == 'message':
             passcode = input("Enter your password:\n")
-            print(user_dict[name])
+            print('here;')
+            print(user_dict[name].password)
             if passcode == user_dict[name].password:
-                print(self.message)
+                print(user_dict[name].message)
         elif attr == 'ip':
             print(user_dict[name].ip)
         elif attr == 'password':
             passcode = input("Enter your password:\n")
             if passcode == self.password:
-                print(self.password)
+                print(user_dict[name].password)
 def choices(user_dict):
      print(user_dict)
+     for key in user_dict.keys():
+         print(user_dict[key])
      while True:
             choice = input('Would you like to create a new user? (y/n)\n')
             if choice == 'y':
                 username = input("Username:\n")
                 while True:
                     password = input("Password:\n")
-                    confirmation = input("Confirm password:\n")
+                    confirmation = input("C onfirm password:\n")
                     if password == confirmation:
                         break
                     print('Make sure both passwords are the same.')
@@ -73,8 +76,9 @@ def choices(user_dict):
                 print(user_dict)
                 choice = input('Would you like to access an attribute?(y/n)\n')
                 if choice == 'y':
-                    name = user_dict[input("Username")]
-                    User.printAttr(name , name, input("Which attribute?\n"))
+                    name = input('name:\n')
+                    user_dict[name].printAttr(name, input('Which attribute?\n'))
+                    #User.printAttr(user_dict[name], name, input("Which attribute?\n"))
                 if choice == 'n':
                     choice = input("Would you like to change username or password? (message/password)")
                     if choice == 'message':
@@ -102,8 +106,9 @@ def main():
                         for line in u:
                             attrs.append(line)
                             print(attrs)
-                        user_dict[username.strip('\n')] = User(username, username, attrs[0], attrs[1], attrs[2])
+                        print(attrs[2])
+                        user_dict[username.strip('\n')] = User(username, attrs[2], attrs[3], attrs[4])
  #   except FileNotFoundError:
      #  choices()
-    choices(user_dict)sss                    
+    choices(user_dict)                    
 main()
