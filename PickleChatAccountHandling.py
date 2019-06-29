@@ -6,8 +6,9 @@ class User:
         self.username = username
         self.ip = ip
         if kwargs:
-            self.message = kwargs
-        else: 
+            for part in kwargs:
+                self.message = part
+        else:
             self.message = self.assignMessage()
         file = open('Users.txt').read()
         with open("Users.txt", 'a+') as f:
@@ -18,9 +19,7 @@ class User:
                 f.write('{}{}'.format(self.username, '\n'))
         if not kwargs:
             self.createFile(self.username, self.password, self.ip, self.message)
-        print('here here')
     def createFile(self, username, password, ip, message, **kwargs):
-        print('here here')
         with open("{}_UserFile.txt".format(username), 'w+') as f:
             if '.' not in f or kwargs is True:
                 parts = [self.username, '\n', self.password,'\n', self.ip,'\n', self.message]
@@ -44,29 +43,23 @@ class User:
             self.createFile(self.username, self.password, self.ip, self.message, True)
             print("Password change successful")
     def printAttr(self, name, attr):
-        if attr == 'message':
-            passcode = input("Enter your password:\n")
-            print('here;')
-            print(user_dict[name].password)
-            if passcode == user_dict[name].password:
-                print(user_dict[name].message)
-        elif attr == 'ip':
-            print(user_dict[name].ip)
-        elif attr == 'password':
-            passcode = input("Enter your password:\n")
-            if passcode == self.password:
-                print(user_dict[name].password)
+        passcode = input("Enter your password:\n")
+        if passcode == self.password:
+            if attr == 'message':
+                print(self.message)
+            elif attr == 'ip':
+                print(self.ip)
+            elif attr == 'password':
+                print(self.password)
 def choices(user_dict):
-     print(user_dict)
-     for key in user_dict.keys():
-         print(user_dict[key])
+     print(user_dict.keys())
      while True:
             choice = input('Would you like to create a new user? (y/n)\n')
             if choice == 'y':
                 username = input("Username:\n")
                 while True:
                     password = input("Password:\n")
-                    confirmation = input("C onfirm password:\n")
+                    confirmation = input("Confirm password:\n")
                     if password == confirmation:
                         break
                     print('Make sure both passwords are the same.')
@@ -76,9 +69,8 @@ def choices(user_dict):
                 print(user_dict)
                 choice = input('Would you like to access an attribute?(y/n)\n')
                 if choice == 'y':
-                    name = input('name:\n')
-                    user_dict[name].printAttr(name, input('Which attribute?\n'))
-                    #User.printAttr(user_dict[name], name, input("Which attribute?\n"))
+                    name = user_dict[input("Username")]
+                    name.printAttr(name, input('Which Attribute?\n'))
                 if choice == 'n':
                     choice = input("Would you like to change username or password? (message/password)")
                     if choice == 'message':
@@ -93,22 +85,15 @@ def choices(user_dict):
 def main():
     global user_dict
     user_dict ={}
-   # try:
     with open("Users.txt", 'r+') as f:
         for line in f:
-            if line != '':
-                username = line
-                print('here')
-                file = '{}_UserFile.txt'.format(username.strip('\n'))
-                if file != '_UserFile.txt':
-                    with open(file, 'r+') as u:
-                        attrs = [username]
-                        for line in u:
-                            attrs.append(line)
-                            print(attrs)
-                        print(attrs[2])
-                        user_dict[username.strip('\n')] = User(username, attrs[2], attrs[3], attrs[4])
- #   except FileNotFoundError:
-     #  choices()
+            username = line.strip('\n')
+            file = '{}_UserFile.txt'.format(username.strip('\n'))
+            if file != '_UserFile.txt':
+                attrs= []
+                with open(file, 'r+') as u:
+                    for line in u:
+                        attrs.append(line.strip('\n'))
+                    user_dict[username.strip('\n')] = User(username, attrs[1], attrs[2], attrs[3])
     choices(user_dict)                    
 main()
