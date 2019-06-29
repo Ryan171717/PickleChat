@@ -19,9 +19,9 @@ class User:
                 f.write('{}{}'.format(self.username, '\n'))
         if not kwargs:
             self.createFile(self.username, self.password, self.ip, self.message)
-    def createFile(self, username, password, ip, message, **kwargs):
+    def createFile(self, username, password, ip, message, *kwargs):
         with open("{}_UserFile.txt".format(username), 'w+') as f:
-            if '.' not in f or kwargs is True:
+            if kwargs is True or '.' not in f:
                 parts = [self.username, '\n', self.password,'\n', self.ip,'\n', self.message]
                 for part in parts:
                     f.write('{}'.format(part))
@@ -35,6 +35,7 @@ class User:
         if passcode == self.password:
             self.message = new_message
             self.createFile(self.username, self.password, self.ip, self.message, True)
+            print('Message change successful')
     def changePassword(self, password):
         original = input("Enter original password:\n")
         if original == self.password:
@@ -73,11 +74,12 @@ def choices(user_dict):
                     name.printAttr(name, input('Which Attribute?\n'))
                 if choice == 'n':
                     choice = input("Would you like to change username or password? (message/password)")
+                    name = input('Username:\n')
                     if choice == 'message':
-                        name = user_dict[input("Username")]
-                        User.changeMessage(name, name, input("New message:\n"))
+                        OBJname = user_dict[name]
+                        OBJname.changeMessage(input("New message:\n"))
                     if choice == 'password':
-                        User.changePassword(user_dict[input("Username")], input("New password:\n"))
+                        User.changePassword(input("New password:\n"))
                 if  choice == 'break':
                     break
             if choice == 'break':
