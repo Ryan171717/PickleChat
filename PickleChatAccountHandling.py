@@ -53,7 +53,10 @@ class User:
             elif attr == 'password':
                 print(self.password)
 def choices(user_dict):
-     print(user_dict.keys())
+    keys = []
+     for key in user_dict.keys():
+         keys.append(key)
+     print('user_dict keys: {}'.format(key for key in keys))
      while True:
             choice = input('Would you like to create a new user? (y/n)\n')
             if choice == 'y':
@@ -99,3 +102,4 @@ def main():
                     user_dict[username.strip('\n')] = User(username, attrs[1], attrs[2], attrs[3])
     choices(user_dict)                    
 main()
+
